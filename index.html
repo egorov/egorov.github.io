@@ -1,11 +1,9 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/default.min.css">
     <link rel="shortcut icon" type="image/x-icon" href="favicon.ico"/>
@@ -18,84 +16,51 @@
           <p class="lead">I am a software craftsman</p>
         </div>
       </div>        
-      <div class="row">
-        <div class="col-sm">
-          <p>
-            <small>Monday, 9th of September 2019 05:31 UTC</small>              
-          </p>
-          <p>
-            Can it be useful generic consumer interface in context of multiple steps data processing?
-          </p>
-          <pre>
-            <code class="CSharp">
-              public interface Consumer&lt;T&gt;
-              {
-                void set(T value);
-              }              
-
-              public class StoreConsumerCommand : Consumer&lt;Store&gt;, Consumer&lt;StoreValueProvider&gt;, Command 
-              { 
-                public void set(Store value) { }
-
-                public void set(StoreValueProvider value) { }
-
-                public void execute() { }
-              }
-            </code>
-          </pre>
-        </div>
-      </div>
-      <div class="row">
-          <div class="col-sm">
-            <p>
-              <small>Sunday, 8th of September 2019 12:49 UTC</small>              
-            </p>
-            <p>
-              I think I found nice way to declare models metadata...
-            </p>
-            <pre>
-              <code class="JavaScript">
-                const person = {
-                  firstName: [
-                    { it: 'should be a string' },
-                    { it: 'value is required' },
-                    { it: 'minimum length', is: 2 },
-                    { it: 'maximum length', is: 100 }
-                  ],
-                  lastName: [
-                    { it: 'should be a string' },
-                    { it: 'value is required' },
-                    { it: 'minimum length', is: 2 },
-                    { it: 'maximum length', is: 100 }
-                  ],
-                  gender: [
-                    { 
-                      it: 'must have a value in the range', 
-                      of: [
-                        'Male',
-                        'Female'
-                      ]
-                    },
-                    { it: 'value is required' }
-                  ],
-                  birthDate: [{ it: 'must be an integer' }],
-                  birthPlace: [
-                    { it: 'should be a string' },
-                    { it: 'maximum length', is: 100 }
-                  ]
-                };
-              </code>
-            </pre>
-          </div>
-      </div>
     </div>
 
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
-    <script>hljs.initHighlightingOnLoad();</script>
+    <script>
+      $(function() {
+        const req = new XMLHttpRequest();
+        req.onload = onPostsLoaded;
+        req.open('get', 'posts.json', true);
+        req.send();
+      });
+
+      function onPostsLoaded() {
+        const dates = JSON.parse(this.responseText);
+        dates.sort();
+
+        dates.forEach(function(value) {
+          const date = new Date(value);
+          getContentOf(date);
+        });
+      }
+
+      function getContentOf(date) {
+        const url = 'posts/' + date.getFullYear() + 
+          '-' + date.getUTCMonth() +
+          '-' + date.getUTCDate() +
+          '-' + date.getUTCHours() +
+          '-' + date.getUTCMinutes() +
+          '.html';
+        const req = new XMLHttpRequest();
+        req.onload = pasteContent;
+        req.open('get', url, true);
+        req.send();
+      }
+
+      function pasteContent() {
+        const jumbotron = document.getElementsByClassName('jumbotron');
+        jumbotron[0].insertAdjacentHTML('afterend', this.responseText);
+
+        document.querySelectorAll('pre code').forEach((block) => {
+          hljs.highlightBlock(block);
+        });
+      }
+    </script>
   </body>
 </html>
