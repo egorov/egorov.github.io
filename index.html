@@ -10,90 +10,74 @@
   </head>
   <body>
     <div class="container">
-      <div class="jumbotron jumbotron-fluid">
-        <div class="container">
-          <h1 class="display-4">EGOROV dot SPACE</h1>
-          <p class="lead">I am a software craftsman</p>
+      <div class="row pt-5">
+        <div class="col-sm">
+          <h1>Sergey Egorov</h1>
+          <h2><small class="text-secondary">Fullstack web software developer</small></h2>
+          <p class="text-muted">Business applications development</p>
         </div>
       </div>
-      <div class="d-flex justify-content-center">
-        <div class="spinner-border text-secondary" role="status">
-          <span class="sr-only">Loading...</span>
+      <div class="row pt-5">
+        <div class="col-sm">
+          <h3>Tools and technologies</h3>
+          <ul>
+            <li>
+              <strong class="text-primary">Javascript</strong> and <strong class="text-primary">C#</strong> languages
+            </li>
+            <li>
+              <strong class="text-primary">Node.js</strong> and <strong class="text-primary">ASP.NET Core</strong> runtime environments
+            </li>
+            <li>
+              <strong class="text-primary">MySQL</strong>, <strong class="text-primary">MS SQL</strong>, <strong class="text-primary">PostgreSQL </strong> databases
+            </li>
+            <li>
+              <strong class="text-primary">Knex.js</strong> and <strong class="text-primary">Microsoft Entity Framework Core</strong> database access
+            </li>
+            <li>
+              <strong class="text-primary">React</strong> - <strong class="text-primary">Redux</strong> frontend applications
+            </li>
+            <li>
+              <strong class="text-primary">TDD</strong> with <strong class="text-primary">Jasmine</strong> and <strong class="text-primary">XUnit</strong>
+            </li>
+            <li>
+              <strong class="text-primary">CI/CD</strong> with <strong class="text-primary">Jenkins</strong> and <strong class="text-primary">UNIX shell scripts</strong>
+            </li>
+            <li>
+              Deployment with <strong class="text-primary">Docker</strong> containers and <strong class="text-primary">Docker swarm</strong> orchestration
+            </li>
+          </ul>
         </div>
-      </div>     
-      <div class="divider"></div>
+      </div>
+      <div class="row pt-5">
+        <div class="col-sm">
+          <h4>Contacts</h4>
+          <dl class="row">
+            <dt class="col-sm-3">Phone</dt>
+            <dd class="col-sm-9">+7 912 922 81 57</dd>
+
+            <dt class="col-sm-3">Email</dt>
+            <dd class="col-sm-9">me&#65312;egorov.space</dd>
+
+            <dt class="col-sm-3">GitHub</dt>
+            <dd class="col-sm-9"><a class="alert-link" href="https://github.com/egorov">https://github.com/egorov</a></dd>
+
+            <dt class="col-sm-3">NpmJS</dt>
+            <dd class="col-sm-9"><a class="alert-link" href="https://www.npmjs.com/~egorov">https://www.npmjs.com/~egorov</a></dd>
+
+            <dt class="col-sm-3">NuGet</dt>
+            <dd class="col-sm-9"><a class="alert-link" href="https://www.nuget.org/profiles/SergeyEgorov">https://www.nuget.org/profiles/SergeyEgorov</a></dd>
+
+            <dt class="col-sm-3">Instagram</dt>
+            <dd class="col-sm-9"><a class="alert-link" href="https://www.instagram.com/georgegotaguitar/">https://www.instagram.com/georgegotaguitar/</a></dd>
+          </dl>
+        </div>
+      </div>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
-    <script>
-      const state = {
-        index: 0,
-        values: null,
-        request: new XMLHttpRequest()
-      };
 
-      $(function() {
-        const req = new XMLHttpRequest();
-        req.onload = loadPosts;
-        req.open('get', 'posts.json', true);
-        req.send();
-      });
-
-      function loadPosts() {
-        
-        const dates = JSON.parse(this.responseText);
-        
-        state.values = dates.sort();
-
-        state.request.onload = pasteContent;
-
-        loadPost();
-      }
-
-      function loadPost() {
-        
-        console.log(`load post number ${state.index}`);
-
-        const milliseconds = state.values[state.index];
-
-        const url = makeUrl(milliseconds);
-
-        state.request.open('get', url, true);
-
-        state.request.send();
-      }
-
-      function makeUrl(milliseconds) {
-        
-        const d = new Date(milliseconds);
-
-        return `posts/${d.getUTCFullYear()}-${d.getUTCMonth()}-${d.getUTCDate()}-${d.getUTCHours()}-${d.getUTCMinutes()}.html`;
-      }
-
-      function pasteContent() {
-
-        console.log(`post number ${state.index} has been loaded`);
-
-        const elements = document.getElementsByClassName('divider');
-        
-        elements[0].insertAdjacentHTML('afterend', this.responseText);
-
-        document.querySelectorAll('pre code').forEach((block) => {
-          hljs.highlightBlock(block);
-        });
-
-        if(state.index == state.values.length - 1) {
-          document.getElementsByClassName('d-flex')[0].className += ' invisible';
-          return;
-        }
-
-        state.index += 1;
-
-        loadPost();
-      }
-    </script>
   </body>
 </html>
